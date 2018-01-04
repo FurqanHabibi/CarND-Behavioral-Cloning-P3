@@ -1,0 +1,4 @@
+data/
+windows_sim/
+.vscode/settings.json
+*.pickle
