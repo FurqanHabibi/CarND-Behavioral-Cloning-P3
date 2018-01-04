@@ -7,11 +7,11 @@ import pickle
 ## Parameters
 print('set parameters...')
 side_cam_correction = 0.2
-top_crop = 50
+top_crop = 60
 bottom_crop = 20
 validation_split = 0.2
 batch_size = 32
-nb_epoch = 10
+nb_epoch = 5
 
 ## Load data
 
@@ -48,7 +48,7 @@ for item, index in enumerate(tqdm(data)):
 
 ## Create the model
 from keras.models import Sequential
-from keras.layers import Cropping2D, Lambda, Flatten, Dense
+from keras.layers import Cropping2D, Lambda, Flatten, Dense, Convolution2D, MaxPooling2D
 
 print('creating model...')
 # use the simpler sequential model
@@ -57,8 +57,26 @@ model = Sequential()
 model.add(Cropping2D(cropping=((top_crop, bottom_crop), (0,0)), input_shape=(160, 320, 3)))
 # normalize the image so it ranges from -1 to 1
 model.add(Lambda(lambda x: ((x / 255.0) - 0.5) * 2))
-# use a simple fully connected layer
+# create the layers
+model.add(Convolution2D(32, 5, 5, activation='relu', border_mode='same'))
+model.add(Convolution2D(32, 5, 5, activation='relu', border_mode='same'))
+model.add(Convolution2D(32, 5, 5, activation='relu', border_mode='same'))
+model.add(Convolution2D(64, 5, 5, activation='relu', border_mode='same'))
+model.add(Convolution2D(64, 5, 5, activation='relu', border_mode='same'))
+model.add(Convolution2D(64, 5, 5, activation='relu', border_mode='same'))
+model.add(Convolution2D(64, 5, 5, activation='relu', border_mode='same'))
+model.add(MaxPooling2D())
+model.add(Convolution2D(128, 5, 5, activation='relu', border_mode='same'))
+model.add(Convolution2D(128, 5, 5, activation='relu', border_mode='same'))
+model.add(Convolution2D(128, 5, 5, activation='relu', border_mode='same'))
+model.add(Convolution2D(128, 5, 5, activation='relu', border_mode='same'))
+model.add(MaxPooling2D())
+model.add(Convolution2D(256, 5, 5, activation='relu', border_mode='same'))
+model.add(MaxPooling2D())
 model.add(Flatten())
+print(model.layers[-1].output_shape)
+#model.add(Dense(2048))
+model.add(Dense(1024))
 model.add(Dense(1))
 # use adam for optimizer and mean-squared-error for loss
 model.compile(optimizer='adam', loss='mse')
@@ -66,4 +84,5 @@ model.compile(optimizer='adam', loss='mse')
 print('training...')
 model.fit(X_train, y_train, validation_split=validation_split, batch_size=batch_size, nb_epoch=nb_epoch, shuffle=True)
 # save the model
+print('saving model...')
 model.save('model.h5')

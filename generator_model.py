@@ -11,7 +11,7 @@ top_crop = 60
 bottom_crop = 20
 validation_split = 0.2
 batch_size = 32
-nb_epoch = 10
+nb_epoch = 5
 
 ## Load data
 
@@ -57,7 +57,6 @@ def generator(samples, batch_size=32):
             # trim image to only see section with road
             X_train = np.array(images)
             y_train = np.array(angles)
-            #print('\noffset = '+ str(offset))
             yield (X_train, y_train)
 
 ## Create the model
@@ -90,7 +89,7 @@ model.add(MaxPooling2D())
 model.add(Flatten())
 print(model.layers[-1].output_shape)
 #model.add(Dense(2048))
-model.add(Dense(512))
+model.add(Dense(256))
 model.add(Dense(1))
 # use adam for optimizer and mean-squared-error for loss
 model.compile(optimizer='adam', loss='mse')
