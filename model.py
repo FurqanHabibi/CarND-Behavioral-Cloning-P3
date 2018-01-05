@@ -11,7 +11,7 @@ top_crop = 60
 bottom_crop = 20
 validation_split = 0.2
 batch_size = 32
-nb_epoch = 5
+nb_epoch = 10
 
 ## Load data
 
@@ -89,7 +89,7 @@ model.add(MaxPooling2D())
 model.add(Flatten())
 print(model.layers[-1].output_shape)
 #model.add(Dense(2048))
-model.add(Dense(256))
+model.add(Dense(512))
 model.add(Dense(1))
 # use adam for optimizer and mean-squared-error for loss
 model.compile(optimizer='adam', loss='mse')
