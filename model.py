@@ -82,7 +82,6 @@ model.add(MaxPooling2D())
 model.add(Convolution2D(256, 5, 5, activation='relu', border_mode='same'))
 model.add(MaxPooling2D())
 model.add(Flatten())
-print(model.layers[-1].output_shape)
 model.add(Dense(512))
 model.add(Dense(1))
 # use adam for optimizer and mean-squared-error for loss
